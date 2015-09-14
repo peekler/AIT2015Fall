@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AITTime</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_hello">Hello AIT Group A</string>
+</resources>
