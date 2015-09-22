@@ -1,16 +1,19 @@
 package hu.ait.android.tictactoe.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
+import android.media.Image;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import hu.ait.android.tictactoe.MainActivity;
+import hu.ait.android.tictactoe.R;
+import hu.ait.android.tictactoe.model.TicTacToeModel;
 
 /**
  * Created by peter on 2015. 09. 17..
@@ -19,7 +22,9 @@ public class TicTacToeView extends View {
 
     private Paint paintBg;
     private Paint paintLine;
-    private List<PointF> touchedPoints = new ArrayList<PointF>();
+
+    private Bitmap backGroundBitmap;
+
 
     public TicTacToeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -32,6 +37,14 @@ public class TicTacToeView extends View {
         paintLine.setColor(Color.WHITE);
         paintLine.setStyle(Paint.Style.STROKE);
         paintLine.setStrokeWidth(5);
+
+        backGroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        backGroundBitmap = backGroundBitmap.createScaledBitmap(backGroundBitmap, getWidth(), getHeight(), false);
     }
 
     @Override
@@ -40,10 +53,39 @@ public class TicTacToeView extends View {
 
         canvas.drawRect(0, 0, getWidth(), getHeight(), paintBg);
 
+        canvas.drawBitmap(backGroundBitmap, 0, 0, null);
+
         drawGameArea(canvas);
 
-        for (PointF pointF : touchedPoints) {
-            canvas.drawCircle(pointF.x, pointF.y, 40, paintLine);
+        drawPlayers(canvas);
+    }
+
+    private void drawPlayers(Canvas canvas) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (TicTacToeModel.getInstance().getFieldContent(i, j) ==
+                        TicTacToeModel.CIRCLE) {
+
+                    // draw a circle at the center of the field
+
+                    // X coordinate: left side of the square + half width of the square
+                    float centerX = i * getWidth() / 3 + getWidth() / 6;
+                    float centerY = j * getHeight() / 3 + getHeight() / 6;
+                    int radius = getHeight() / 6 - 2;
+
+                    canvas.drawCircle(centerX, centerY, radius, paintLine);
+
+                } else if (TicTacToeModel.getInstance().getFieldContent(i, j) ==
+                        TicTacToeModel.CROSS) {
+                    canvas.drawLine(i * getWidth() / 3, j * getHeight() / 3,
+                            (i + 1) * getWidth() / 3,
+                            (j + 1) * getHeight() / 3, paintLine);
+
+                    canvas.drawLine((i + 1) * getWidth() / 3, j * getHeight() / 3,
+                            i * getWidth() / 3, (j + 1) * getHeight() / 3,
+                            paintLine);
+                }
+            }
         }
     }
 
@@ -66,13 +108,30 @@ public class TicTacToeView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            PointF touchPoint = new PointF(event.getX(), event.getY());
-            touchedPoints.add(touchPoint);
+            int tX = ((int) event.getX()) / (getWidth() / 3);
+            int tY = ((int) event.getY()) / (getHeight() / 3);
 
-            invalidate();
+            handlePlayerMove(tX, tY);
         }
 
         return super.onTouchEvent(event);
+    }
+
+    private void handlePlayerMove(int tX, int tY) {
+        if (tX < 3 && tY < 3 &&
+                TicTacToeModel.getInstance().getFieldContent(tX, tY) ==
+                        TicTacToeModel.EMPTY) {
+            TicTacToeModel.getInstance().setFieldContent(
+                    tX, tY, TicTacToeModel.getInstance().getNextPlayer());
+            TicTacToeModel.getInstance().changeNextPlayer();
+            ((MainActivity) getContext()).showSnackBarMessage(
+                    "The next player is: " +
+                            ((TicTacToeModel.getInstance().getNextPlayer() ==
+                                    TicTacToeModel.CIRCLE) ? "O" : "X")
+            );
+
+            invalidate();
+        }
     }
 
     @Override
@@ -84,9 +143,7 @@ public class TicTacToeView extends View {
     }
 
     public void clearGameArea() {
-        touchedPoints.clear();
+        TicTacToeModel.getInstance().resetModel();
         invalidate();
     }
-
-
 }
