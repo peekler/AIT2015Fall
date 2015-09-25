@@ -14,6 +14,7 @@ import hu.ait.android.tictactoe.view.TicTacToeView;
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout layoutContent;
+    private TicTacToeView ticTacToeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         layoutContent = (LinearLayout) findViewById(R.id.layoutContent);
 
-        final TicTacToeView ticTacToeView =
+        ticTacToeView =
             (TicTacToeView) findViewById(R.id.gameView);
         Button btnRestart =
                 (Button) findViewById(R.id.btnRestart);
@@ -41,5 +42,15 @@ public class MainActivity extends AppCompatActivity {
         Snackbar.make(layoutContent,
                 msg,
                 Snackbar.LENGTH_LONG).show();
+    }
+
+    public void showSnackBarMessageWithRestart(String msg) {
+        Snackbar.make(layoutContent, msg, Snackbar.LENGTH_LONG).
+                setAction(R.string.btn_restart, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ticTacToeView.clearGameArea();
+                    }
+                }).show();
     }
 }

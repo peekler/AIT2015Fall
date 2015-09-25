@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.media.Image;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +24,8 @@ public class TicTacToeView extends View {
 
     private Bitmap backGroundBitmap;
 
+    private boolean gameEnded = false;
+
 
     public TicTacToeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,13 +39,15 @@ public class TicTacToeView extends View {
         paintLine.setStyle(Paint.Style.STROKE);
         paintLine.setStrokeWidth(5);
 
-        backGroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+        backGroundBitmap = BitmapFactory.decodeResource(
+                getResources(), R.drawable.background);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        backGroundBitmap = backGroundBitmap.createScaledBitmap(backGroundBitmap, getWidth(), getHeight(), false);
+        backGroundBitmap = backGroundBitmap.createScaledBitmap(
+                backGroundBitmap, getWidth(), getHeight(), false);
     }
 
     @Override
@@ -108,10 +111,14 @@ public class TicTacToeView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int tX = ((int) event.getX()) / (getWidth() / 3);
-            int tY = ((int) event.getY()) / (getHeight() / 3);
+            if (!gameEnded) {
+                int tX = ((int) event.getX()) / (getWidth() / 3);
+                int tY = ((int) event.getY()) / (getHeight() / 3);
 
-            handlePlayerMove(tX, tY);
+                handlePlayerMove(tX, tY);
+            } else {
+                ((MainActivity) getContext()).showSnackBarMessageWithRestart(getContext().getString(R.string.txt_game_ended));
+            }
         }
 
         return super.onTouchEvent(event);
@@ -123,12 +130,32 @@ public class TicTacToeView extends View {
                         TicTacToeModel.EMPTY) {
             TicTacToeModel.getInstance().setFieldContent(
                     tX, tY, TicTacToeModel.getInstance().getNextPlayer());
-            TicTacToeModel.getInstance().changeNextPlayer();
-            ((MainActivity) getContext()).showSnackBarMessage(
-                    "The next player is: " +
-                            ((TicTacToeModel.getInstance().getNextPlayer() ==
-                                    TicTacToeModel.CIRCLE) ? "O" : "X")
-            );
+
+            int winnerCheck = TicTacToeModel.getInstance().getWinner();
+            if (winnerCheck == TicTacToeModel.NO_WINNER_YET) {
+                TicTacToeModel.getInstance().changeNextPlayer();
+
+                ((MainActivity) getContext()).showSnackBarMessage(
+                        getResources().getString(R.string.txt_next_player,
+                                ((TicTacToeModel.getInstance().getNextPlayer() ==
+                                        TicTacToeModel.CIRCLE) ? "O" : "X"))
+                );
+            } else if (winnerCheck == TicTacToeModel.CIRCLE) {
+                gameEnded = true;
+                ((MainActivity) getContext()).showSnackBarMessageWithRestart(
+                        getContext().getString(R.string.txt_winner_o)
+                );
+            } else if (winnerCheck == TicTacToeModel.CROSS) {
+                gameEnded = true;
+                ((MainActivity) getContext()).showSnackBarMessageWithRestart(
+                        getContext().getString(R.string.txt_winner_x)
+                );
+            } else if (winnerCheck == TicTacToeModel.EMPTY) {
+                gameEnded = true;
+                ((MainActivity) getContext()).showSnackBarMessageWithRestart(
+                        getContext().getString(R.string.txt_tie_game)
+                );
+            }
 
             invalidate();
         }
@@ -143,6 +170,7 @@ public class TicTacToeView extends View {
     }
 
     public void clearGameArea() {
+        gameEnded = false;
         TicTacToeModel.getInstance().resetModel();
         invalidate();
     }

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MultiActivityDemo</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="hint_name">Please enter your name here</string>
+    <string name="btnStart">Start</string>
+    <string name="error_empty_name">Please fill this field!</string>
+</resources>
