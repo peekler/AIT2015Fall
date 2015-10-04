@@ -1,5 +1,6 @@
 package hu.ait.android.highlowgame;
 
+import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,6 +50,11 @@ public class HighLowActivity extends AppCompatActivity {
                     } else {
                         tvData.setText("You have won! Yuppeee!");
                         //generateNewNumber();
+                        Intent intentShowDialog = new Intent();
+                        intentShowDialog.setClass(HighLowActivity.this,
+                                DialogResultActivity.class);
+
+                        startActivity(intentShowDialog);
                     }
 
                 } else {

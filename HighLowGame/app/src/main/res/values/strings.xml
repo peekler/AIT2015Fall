@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_high_low">HighLowActivity</string>
+    <string name="title_activity_dialog_result">Winner!</string>
+    <string name="txt_won">You have won the game!</string>
 </resources>
