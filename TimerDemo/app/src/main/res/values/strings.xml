@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">TimerDemo</string>
-    <string name="txt_ellapsed_time">Ellapsed time: %1$d</string>
+    <string name="txt_elapsed_time">%1$02d : %2$02d</string>
 </resources>

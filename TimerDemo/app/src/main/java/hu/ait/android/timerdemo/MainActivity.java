@@ -10,7 +10,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvCounter;
-    private int counter = 0;
+    private long startTime = 0;
     private Timer timer;
 
     private class MyCounterTask extends TimerTask {
@@ -18,7 +18,15 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    tvCounter.setText(getString(R.string.txt_ellapsed_time, counter++));
+                    long currentTime = System.currentTimeMillis();
+                    long diff = currentTime - startTime;
+                    long sec = diff / 1000;
+                    long msec = (diff % 1000) / 10;
+
+                    tvCounter.setText(
+                            getString(R.string.txt_elapsed_time,
+                                    sec, msec));
+
                 }
             });
         }
@@ -31,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
         tvCounter = (TextView) findViewById(R.id.tvCounter);
 
         timer = new Timer();
-        timer.schedule(new MyCounterTask(), 0, 1000);
+        startTime = System.currentTimeMillis();
+        timer.schedule(new MyCounterTask(), 0, 10);
     }
 
     @Override
