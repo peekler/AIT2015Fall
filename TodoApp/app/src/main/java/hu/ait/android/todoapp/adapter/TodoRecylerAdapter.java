@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import hu.ait.android.todoapp.R;
@@ -58,6 +59,30 @@ public class TodoRecylerAdapter extends
     @Override
     public int getItemCount() {
         return todos.size();
+    }
+
+    public void addTodo(String todo) {
+        todos.add(new Todo(todo, false));
+        notifyDataSetChanged();
+    }
+
+    public void removeTodo(int index) {
+        todos.remove(index);
+        //notifyDataSetChanged();
+        notifyItemRemoved(index);
+    }
+
+    public void swapTodos(int oldPosition, int newPosition) {
+        if (oldPosition < newPosition) {
+            for (int i = oldPosition; i < newPosition; i++) {
+                Collections.swap(todos, i, i + 1);
+            }
+        } else {
+            for (int i = oldPosition; i > newPosition; i--) {
+                Collections.swap(todos, i, i - 1);
+            }
+        }
+        notifyItemMoved(oldPosition, newPosition);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
