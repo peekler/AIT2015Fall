@@ -1,12 +1,17 @@
 package hu.ait.android.todoapp.data;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by peter on 2015. 10. 15..
  */
-public class Todo {
+public class Todo extends SugarRecord<Todo> {
 
     private String todo;
     private boolean done;
+
+    public Todo() {
+    }
 
     public Todo(String todo, boolean done) {
         this.todo = todo;

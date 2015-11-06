@@ -4,9 +4,6 @@ import com.orm.SugarRecord;
 
 import java.util.Date;
 
-/**
- * Created by peter on 2015. 11. 02..
- */
 public class DayItem extends SugarRecord<DayItem> {
 
     private String title;

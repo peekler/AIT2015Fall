@@ -36,6 +36,6 @@ public class TodoListTouchHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        adapter.removeTodo(viewHolder.getAdapterPosition());
+        adapter.deleteTodo(viewHolder.getAdapterPosition());
     }
 }

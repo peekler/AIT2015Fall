@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import hu.ait.android.todoapp.R;
@@ -30,10 +31,14 @@ public class TodoRecylerAdapter extends
 
     public TodoRecylerAdapter(Context context) {
         this.context = context;
+
+        todos = Todo.listAll(Todo.class);
+
+        /*
         todos = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             todos.add(new Todo("Todo "+i, false));
-        }
+        }*/
     }
 
 
@@ -53,6 +58,8 @@ public class TodoRecylerAdapter extends
             @Override
             public void onClick(View v) {
                 todo.setDone(((CheckBox)v).isChecked());
+                todo.save();
+
                 Toast.makeText(context,
                         "Todo clicked "+position, Toast.LENGTH_SHORT).show();
             }
@@ -67,11 +74,17 @@ public class TodoRecylerAdapter extends
     }
 
     public void addTodo(String todo) {
-        todos.add(new Todo(todo, false));
+        Todo newTodo = new Todo(todo, false);
+        newTodo.save();
+        todos.add(newTodo);
         notifyDataSetChanged();
     }
 
-    public void removeTodo(int index) {
+    public void deleteTodo(int index) {
+        // remove Todo from the DataBase
+        todos.get(index).delete();
+
+        // remove Todo from the list
         todos.remove(index);
         //notifyDataSetChanged();
         notifyItemRemoved(index);
