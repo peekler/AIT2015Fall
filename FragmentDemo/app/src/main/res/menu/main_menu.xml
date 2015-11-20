@@ -8,4 +8,12 @@
         android:title="Details"
         android:id="@+id/action_details"
         />
+    <item
+        android:title="Show message"
+        android:id="@+id/action_message"
+        />
+    <item
+        android:title="Select fruit"
+        android:id="@+id/action_select"
+        />
 </menu>

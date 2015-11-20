@@ -19,7 +19,7 @@
         <fragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="hu.bme.aut.android.fragmentdemo.MainFragment"/>
+            android:name="hu.bme.aut.android.fragmentdemo.fragments.MainFragment"/>
         -->
     </FrameLayout>
 
