@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".WakeUpAlarmReceiver" android:process=":remote"/>
+        <receiver android:name=".WakeUpAlarmReceiver"
+            android:process=":remote"/>
 
     </application>
 

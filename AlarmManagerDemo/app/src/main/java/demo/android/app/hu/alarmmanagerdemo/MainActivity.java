@@ -36,7 +36,8 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
                 calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.add(Calendar.SECOND, 10);
 
-                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                AlarmManager am = (AlarmManager) getSystemService(
+                        ALARM_SERVICE);
                 am.setRepeating(AlarmManager.RTC_WAKEUP,
                         calendar.getTimeInMillis(),
                         10000,
